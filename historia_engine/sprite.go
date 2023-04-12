@@ -8,18 +8,16 @@ import (
 type Sprite struct {
 	textureRect math2d.Rect
 	texture     *ebiten.Image
-	pivot       math2d.Vector2D
 }
 
 func NewSprite(texture *ebiten.Image) *Sprite {
-	pivot := math2d.Vector2D{X: float64(texture.Bounds().Min.X),
-		Y: float64(texture.Bounds().Min.Y)}
+
 	textureRect := math2d.NewRect(float64(texture.Bounds().Min.X),
 		float64(texture.Bounds().Min.Y),
 		float64(texture.Bounds().Max.X),
 		float64(texture.Bounds().Max.Y))
 
-	return &Sprite{textureRect: *textureRect, texture: texture, pivot: pivot}
+	return &Sprite{textureRect: *textureRect, texture: texture}
 }
 
 func (s *Sprite) GetTextureRect() math2d.Rect {
@@ -35,19 +33,6 @@ func (s *Sprite) GetTexture() *ebiten.Image {
 }
 func (s *Sprite) SetTexture(texture *ebiten.Image) {
 	s.texture = texture
-}
-
-func (s *Sprite) GetPivot() math2d.Vector2D {
-	return s.pivot
-}
-
-func (s *Sprite) SetPivot(x, y float64) {
-	s.pivot = math2d.Vector2D{X: x, Y: y}
-}
-
-func (s *Sprite) SetPivotToCenter() {
-	x, y := s.textureRect.GetCenter()
-	s.pivot = math2d.Vector2D{X: x, Y: y}
 }
 
 //

@@ -5,13 +5,15 @@ import (
 )
 
 type SpriteNode struct {
-	SceneNode
+	*SceneNode
 	sprite *Sprite
 }
 
 func NewSpriteNode(texture *ebiten.Image) *SpriteNode {
 	sprite := NewSprite(texture)
-	return &SpriteNode{sprite: sprite}
+	spriteNode := &SpriteNode{sprite: sprite}
+	spriteNode.SceneNode = NewSceneNode(spriteNode)
+	return spriteNode
 }
 
 func (s *SpriteNode) GetSprite() *Sprite {
@@ -22,22 +24,12 @@ func (s *SpriteNode) SetSprite(sprite *Sprite) {
 	s.sprite = sprite
 }
 
-func (s *SpriteNode) Update() {
-	s.updateCurrent()
-	for _, child := range s.children {
-		child.Update()
-	}
-}
-
 func (s *SpriteNode) SetPivotToCenter() {
 	rect := s.GetSprite().GetTextureRect()
 	x, y := rect.GetCenter()
-	s.SetPivot(x, y)
+	s.SetPivot(x/2, y/2)
 }
-func (s *SpriteNode) Draw(target *ebiten.Image, op *ebiten.DrawImageOptions) {
-	op.GeoM = s.updateGeoM(op.GeoM)
+
+func (s *SpriteNode) drawCurrent(target *ebiten.Image, op *ebiten.DrawImageOptions) {
 	s.sprite.Draw(target, op)
-	for _, child := range s.children {
-		child.Draw(target, op)
-	}
 }

@@ -34,6 +34,10 @@ var (
 
 func run() error {
 	var out io.Writer
+	*inputFilename = "C:\\Users\\Luigi Vanacore \\Downloads\\LIBRI\\go\\AirWars2D\\assets\\Meteor\\Big1.png"
+
+	*outputFilename = "C:\\Users\\Luigi Vanacore \\Downloads\\LIBRI\\go\\AirWars2D\\assets\\Meteor\\Big1.go"
+
 	if *outputFilename != "" {
 		f, err := os.Create(*outputFilename)
 		if err != nil {
@@ -56,7 +60,6 @@ func run() error {
 	} else {
 		in = os.Stdin
 	}
-
 	if err := file2byteslice.Write(out, in, *compress, *buildTags, *packageName, *varName); err != nil {
 		return err
 	}
@@ -65,7 +68,7 @@ func run() error {
 }
 
 func main() {
-	flag.Parse()
+	//flag.Parse()
 	if err := run(); err != nil {
 		panic(err)
 	}

@@ -8,8 +8,8 @@ type Transform struct {
 	rotation int
 }
 
-func (t *Transform) GetPosition() (float64, float64) {
-	return t.position.X, t.position.Y
+func (t *Transform) GetPosition() math2d.Vector2D {
+	return t.position
 }
 
 func (t *Transform) SetPosition(x, y float64) {

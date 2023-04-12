@@ -11,8 +11,8 @@ import (
 
 const (
 	Desert = iota
-	Eagle
-	Raptor
+	Ship
+	BigMeteor
 )
 
 const (
@@ -25,14 +25,13 @@ func ResourceManager() *resourceManager {
 	if instance == nil {
 		instance = newResourceManager()
 	}
-	
+
 	return instance
 }
 
 type resourceManager struct {
-
 	images []*ebiten.Image
-	font font.Face
+	font   font.Face
 }
 
 func newResourceManager() *resourceManager {
@@ -41,28 +40,28 @@ func newResourceManager() *resourceManager {
 	return r
 }
 
-func (r*resourceManager) LoadAssets() {
-	var images = make([]*ebiten.Image,Raptor+1)
-	
+func (r *resourceManager) LoadAssets() {
+	var images = make([]*ebiten.Image, BigMeteor+1)
+
 	images[Desert] = loadImage(desert)
-	images[Eagle] = loadImage(eagle)
+	images[Ship] = loadImage(ship)
+	images[BigMeteor] = loadImage(big_meteor)
 	//images[Raptor] = ebiten.NewImageFromImage(loadImage(RaptorTexture))
 
 	r.images = append(r.images, images...)
-	
-	
+
 	//r.font = loadFont(SansationFont)
 }
 
-func (r*resourceManager) GetTextures() []*ebiten.Image {
+func (r *resourceManager) GetTextures() []*ebiten.Image {
 	return r.images
 }
 
-func (r*resourceManager) GetTexture(texture uint) *ebiten.Image {
+func (r *resourceManager) GetTexture(texture uint) *ebiten.Image {
 	return r.images[texture]
 }
 
-func (r*resourceManager) GetFont() font.Face {
+func (r *resourceManager) GetFont() font.Face {
 	return r.font
 }
 
@@ -83,7 +82,7 @@ func loadFont(f []byte) font.Face {
 	gamefont, err := opentype.NewFace(tt, &opentype.FaceOptions{
 		Size:    fontSize,
 		DPI:     dpi,
-		Hinting: font.HintingFull ,
+		Hinting: font.HintingFull,
 	})
 	if err != nil {
 		log.Fatal(err)

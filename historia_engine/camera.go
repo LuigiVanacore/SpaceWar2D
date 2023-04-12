@@ -149,8 +149,8 @@ func (c *Camera) Follow(nodeToFollow Node) {
 
 func (c *Camera) Update() {
 	if c.isFollowing {
-		x, y := c.nodeToFollow.GetPosition()
-		c.SetPosition(x, y)
+		position := c.nodeToFollow.GetPosition()
+		c.SetPosition(position.X, position.Y)
 	}
 }
 
