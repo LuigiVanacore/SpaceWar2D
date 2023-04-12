@@ -34,10 +34,10 @@ type PlayerShoot struct {
 func NewPlayerShoot(player *Player) *PlayerShoot {
 	shoot := NewShoot(time.Second * 5)
 	playerShoot := &PlayerShoot{*shoot}
-	position := player.GetPosition()
+	position := player.GetTransform().GetPosition()
 	//playerShoot.rotation = player._sprite.getRotation()/180*M_PI - M_PI/2
 
-	playerShoot.SetPosition(position.X, position.Y)
+	playerShoot.GetTransform().SetPosition(position.X, position.Y)
 	return playerShoot
 }
 

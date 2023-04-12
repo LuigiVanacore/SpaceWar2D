@@ -30,8 +30,8 @@ func (t *Transform) SetPivot(x, y float64) {
 	t.pivot.Y = y
 }
 
-func (t *Transform) GetPivot() (float64, float64) {
-	return t.pivot.X, t.pivot.Y
+func (t *Transform) GetPivot() math2d.Vector2D {
+	return t.pivot
 }
 
 func (t *Transform) Rotate(rotation int) {

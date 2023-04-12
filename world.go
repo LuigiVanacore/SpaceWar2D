@@ -5,8 +5,9 @@ import (
 )
 
 type World struct {
-	*historia.SceneNode
+	historia.SceneNode
 	player *Player
+	//sprite *historia.SpriteNode
 	//desert  *historia.SpriteNode
 	//camera  *historia.Camera
 	//meteors []*Meteor
@@ -14,9 +15,11 @@ type World struct {
 
 func NewWorld() *World {
 	w := &World{}
-	w.SceneNode = historia.NewSceneNode(w)
 	//w.camera = historia.NewCamera(WindowWidth, WindowHeight, WindowWidth/2, WindowHeight/2, 0, 1)
 	w.player = NewPlayer()
+	//spriteNode := historia.NewSpriteNode(Assets.ResourceManager().GetTexture(Assets.Ship))
+	//spriteNode.SetPivotToCenter()
+	//spriteNode.SetPosition(200, 200)
 	//w.desert = historia.NewSpriteNode(Assets.ResourceManager().GetTexture(Assets.Desert))
 	//w.camera.Follow(w.player)
 	//w.meteors = append(w.meteors, NewMeteor(big))
@@ -27,13 +30,20 @@ func NewWorld() *World {
 	c.SetDebug(true)
 	//w.meteors[0].AttachChild(c)
 	w.AttachChild(w.player)
+	//w.AttachChild(spriteNode)
+	//w.sprite = spriteNode
 	//w.AttachChild(w.meteors[0])
-	w.AttachChild(c)
+	//w.AttachChild(c)
 	return w
 }
 
-func (w *World) UpdateCurrent() {
+var rotation int
+
+func (w *World) Update() {
+	rotation += 1
+	//w.sprite.SetRotation(rotation)
 	w.correctPosition()
+	w.UpdateChildren()
 }
 
 func (w *World) GetPlayer() *Player {
@@ -41,7 +51,7 @@ func (w *World) GetPlayer() *Player {
 }
 
 func (w *World) correctPosition() {
-	playerPosition := w.player.GetPosition()
+	playerPosition := w.player.GetTransform().GetPosition()
 	if playerPosition.X < 0 {
 		playerPosition.SetPosition(WindowWidth, WindowHeight-playerPosition.Y)
 	} else if playerPosition.X > WindowWidth {
@@ -53,5 +63,5 @@ func (w *World) correctPosition() {
 		playerPosition.Y = 0
 	}
 
-	w.player.SetPosition(playerPosition.X, playerPosition.Y)
+	w.player.GetTransform().SetPosition(playerPosition.X, playerPosition.Y)
 }

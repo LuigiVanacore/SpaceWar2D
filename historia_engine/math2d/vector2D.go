@@ -35,12 +35,14 @@ func (v *Vector2D) Length() float64 {
 	return math.Sqrt(v.DotProduct(*v))
 }
 
-func (v *Vector2D) Add(v2 Vector2D) Vector2D {
-	return Vector2D{v.X + v2.X, v.Y + v2.Y}
+func (v *Vector2D) Add(v2 Vector2D) {
+	v.X += v2.X
+	v.Y += v2.Y
 }
 
-func (v *Vector2D) Subtract(v2 Vector2D) Vector2D {
-	return Vector2D{v.X - v2.X, v.Y - v2.Y}
+func (v *Vector2D) Subtract(v2 Vector2D) {
+	v.X -= v2.X
+	v.Y -= v2.Y
 }
 
 func (v *Vector2D) Negate() Vector2D {

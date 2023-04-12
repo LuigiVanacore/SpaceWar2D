@@ -17,7 +17,7 @@ const (
 )
 
 type Player struct {
-	*historia_engine.SpriteNode
+	historia_engine.SceneNode
 	input.ActionTarget
 	velocity  math2d.Vector2D
 	direction int
@@ -36,10 +36,9 @@ func NewPlayer() *Player {
 	actionMap.Add(2, *actionRight)
 	actionMap.Add(3, *actionUp)
 	actionTarget := input.NewActionTarget(actionMap)
-	player := &Player{SpriteNode: spriteNode, ActionTarget: *actionTarget}
-	player.SceneNode = historia_engine.NewSceneNode(player)
-	player.SceneNode.SetDebugColor(colornames.Green)
-	player.SetPosition(150, 150)
+	player := &Player{SceneNode: *historia_engine.NewSceneNode(), ActionTarget: *actionTarget}
+	player.GetTransform().SetPosition(150, 150)
+	player.AttachChild(spriteNode)
 	actionTarget.Bind(1, func() { player.canMove = true; player.Move(Left) })
 	actionTarget.Bind(2, func() { player.canMove = true; player.Move(Right) })
 	actionTarget.Bind(3, func() {
@@ -49,8 +48,9 @@ func NewPlayer() *Player {
 	return player
 }
 
-func (p *Player) UpdateCurrent() {
+func (p *Player) Update() {
 	p.ProcessEvents()
+	p.UpdateChildren()
 }
 
 func (p *Player) ProcessEvents() {
@@ -61,14 +61,14 @@ func (p *Player) ProcessEvents() {
 func (p *Player) Move(direction int) {
 	if p.canMove {
 		if direction == Left {
-			p.Rotate(-5)
+			p.GetTransform().Rotate(-5)
 		}
 		if direction == Right {
-			p.Rotate(5)
+			p.GetTransform().Rotate(5)
 		}
 		if direction == Up {
-			angle := float64(p.GetRotation())/180*math.Pi - math.Pi/2
-			p.Transform.Move(math.Cos(angle)*5, math.Sin(angle)*5)
+			angle := float64(p.GetTransform().GetRotation())/180*math.Pi - math.Pi/2
+			p.GetTransform().Move(math.Cos(angle)*5, math.Sin(angle)*5)
 		}
 	}
 }

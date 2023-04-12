@@ -47,8 +47,8 @@ func TestAdd(t *testing.T) {
 
 	v1 := Vector2D{x1, y1}
 	v2 := Vector2D{x2, y2}
-	result := v1.Add(v2)
-	if result.X != 5 || result.Y != 10 {
+	v1.Add(v2)
+	if v1.X != 5 || v1.Y != 10 {
 		t.Fail()
 	}
 }
@@ -61,8 +61,8 @@ func TestSubtract(t *testing.T) {
 
 	v1 := Vector2D{x1, y1}
 	v2 := Vector2D{x2, y2}
-	result := v1.Subtract(v2)
-	if result.X != -3 || result.Y != -6 {
+	v1.Subtract(v2)
+	if v1.X != -3 || v1.Y != -6 {
 		t.Fail()
 	}
 }
