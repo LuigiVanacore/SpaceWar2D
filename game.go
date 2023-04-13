@@ -1,9 +1,7 @@
 package airwar2d
 
 import (
-	"fmt"
 	"github.com/hajimehoshi/ebiten/v2"
-	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
 )
 
 const (
@@ -36,8 +34,8 @@ func (g *Game) Draw(screen *ebiten.Image) {
 	//g.camera.Blit(screen)
 	op := &ebiten.DrawImageOptions{}
 	g.world.Draw(screen, op)
-	playerPosition := g.world.GetPlayer().GetPosition()
-	ebitenutil.DebugPrint(screen, fmt.Sprintf("player %3.3f %3.3f \n ", playerPosition.X, playerPosition.Y))
+	//playerPosition := g.world.GetPlayer().GetPosition()
+	//ebitenutil.DebugPrint(screen, fmt.Sprintf("player %3.3f %3.3f \n ", playerPosition.X, playerPosition.Y))
 
 }
 

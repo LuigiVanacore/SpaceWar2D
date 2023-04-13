@@ -1,11 +1,15 @@
 package historia_engine
 
-import "github.com/LuigiVanacore/AirWars2D/historia_engine/math2d"
+import (
+	"github.com/LuigiVanacore/AirWars2D/historia_engine/math2d"
+	"github.com/hajimehoshi/ebiten/v2"
+)
 
 type Transform struct {
 	position math2d.Vector2D
 	pivot    math2d.Vector2D
 	rotation int
+	geoM     ebiten.GeoM
 }
 
 func (t *Transform) GetPosition() math2d.Vector2D {
@@ -32,6 +36,14 @@ func (t *Transform) SetPivot(x, y float64) {
 
 func (t *Transform) GetPivot() math2d.Vector2D {
 	return t.pivot
+}
+
+func (t *Transform) GetGeoM() ebiten.GeoM {
+	return t.geoM
+}
+
+func (t *Transform) SetGeoM(geoM ebiten.GeoM) {
+	t.geoM = geoM
 }
 
 func (t *Transform) Rotate(rotation int) {

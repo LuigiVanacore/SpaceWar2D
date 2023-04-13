@@ -1,5 +1,9 @@
 package historia_engine
 
+type Entity interface {
+	Update()
+}
+
 //type Entity struct {
 //	Transform
 //	parent     *Entity

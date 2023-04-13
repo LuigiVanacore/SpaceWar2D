@@ -1,12 +1,10 @@
 package airwar2d
 
 import (
-	"github.com/LuigiVanacore/AirWars2D/Assets"
 	"github.com/LuigiVanacore/AirWars2D/historia_engine"
 	"github.com/LuigiVanacore/AirWars2D/historia_engine/input"
 	"github.com/LuigiVanacore/AirWars2D/historia_engine/math2d"
 	"github.com/hajimehoshi/ebiten/v2"
-	"golang.org/x/image/colornames"
 	"math"
 )
 
@@ -17,7 +15,7 @@ const (
 )
 
 type Player struct {
-	historia_engine.SceneNode
+	historia_engine.Entity2D
 	input.ActionTarget
 	velocity  math2d.Vector2D
 	direction int
@@ -25,9 +23,6 @@ type Player struct {
 }
 
 func NewPlayer() *Player {
-	spriteNode := historia_engine.NewSpriteNode(Assets.ResourceManager().GetTexture(Assets.Ship))
-	spriteNode.SetPivotToCenter()
-	spriteNode.SceneNode.SetDebugColor(colornames.Red)
 	actionMap := input.NewActionMap()
 	actionLeft := input.NewActionKey(ebiten.KeyLeft, input.PRESSED)
 	actionRight := input.NewActionKey(ebiten.KeyRight, input.PRESSED)
@@ -36,9 +31,8 @@ func NewPlayer() *Player {
 	actionMap.Add(2, *actionRight)
 	actionMap.Add(3, *actionUp)
 	actionTarget := input.NewActionTarget(actionMap)
-	player := &Player{SceneNode: *historia_engine.NewSceneNode(), ActionTarget: *actionTarget}
-	player.GetTransform().SetPosition(150, 150)
-	player.AttachChild(spriteNode)
+	player := &Player{Entity2D: historia_engine.Entity2D{}, ActionTarget: *actionTarget}
+	player.SetPosition(150, 150)
 	actionTarget.Bind(1, func() { player.canMove = true; player.Move(Left) })
 	actionTarget.Bind(2, func() { player.canMove = true; player.Move(Right) })
 	actionTarget.Bind(3, func() {
@@ -50,7 +44,6 @@ func NewPlayer() *Player {
 
 func (p *Player) Update() {
 	p.ProcessEvents()
-	p.UpdateChildren()
 }
 
 func (p *Player) ProcessEvents() {
@@ -61,14 +54,14 @@ func (p *Player) ProcessEvents() {
 func (p *Player) Move(direction int) {
 	if p.canMove {
 		if direction == Left {
-			p.GetTransform().Rotate(-5)
+			p.Rotate(-5)
 		}
 		if direction == Right {
-			p.GetTransform().Rotate(5)
+			p.Rotate(5)
 		}
 		if direction == Up {
-			angle := float64(p.GetTransform().GetRotation())/180*math.Pi - math.Pi/2
-			p.GetTransform().Move(math.Cos(angle)*5, math.Sin(angle)*5)
+			angle := float64(p.GetRotation())/180*math.Pi - math.Pi/2
+			p.Transform.Move(math.Cos(angle)*5, math.Sin(angle)*5)
 		}
 	}
 }

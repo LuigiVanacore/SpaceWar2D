@@ -8,14 +8,14 @@ import (
 )
 
 type SceneNode struct {
-	Transform
-	children []Node
-	parent   Node
+	entity   Entity
+	children []*SceneNode
+	parent   *SceneNode
 	color    color.Color
 }
 
-func NewSceneNode() *SceneNode {
-	sceneNode := &SceneNode{color: colornames.White}
+func NewSceneNode(entity Entity) *SceneNode {
+	sceneNode := &SceneNode{entity: entity, color: colornames.White}
 	return sceneNode
 }
 
@@ -23,13 +23,13 @@ func (s *SceneNode) SetDebugColor(color color.Color) {
 	s.color = color
 }
 
-func (s *SceneNode) AttachChild(child Node) {
+func (s *SceneNode) AttachChild(child *SceneNode) {
 	child.AttachParent(s)
 
 	s.children = append(s.children, child)
 }
 
-func (s *SceneNode) DetachChild(node Node) bool {
+func (s *SceneNode) DetachChild(node *SceneNode) bool {
 	for i, child := range s.children {
 		if child == node {
 			s.children[i] = s.children[len(s.children)-1]
@@ -40,20 +40,20 @@ func (s *SceneNode) DetachChild(node Node) bool {
 	return false
 }
 
-func (s *SceneNode) AttachParent(node Node) {
+func (s *SceneNode) AttachParent(node *SceneNode) {
 	s.parent = node
 }
 
-func (s *SceneNode) GetChildren() []Node {
+func (s *SceneNode) GetChildren() []*SceneNode {
 	return s.children
-}
-
-func (s *SceneNode) GetTransform() *Transform {
-	return &s.Transform
 }
 
 func (s *SceneNode) Update() {
 	s.UpdateChildren()
+	if s.entity != nil {
+		s.entity.Update()
+
+	}
 }
 
 func (s *SceneNode) UpdateChildren() {
@@ -62,32 +62,37 @@ func (s *SceneNode) UpdateChildren() {
 	}
 }
 
-func (s *SceneNode) updateGeoM(geoM ebiten.GeoM) ebiten.GeoM {
-	position := s.GetPosition()
-	pivot := s.GetPivot()
-	rotation := s.GetRotation()
-	if s.parent != nil {
-		parentPosition := s.parent.GetTransform().GetPosition()
-		parentPivot := s.parent.GetTransform().GetPivot()
-		parentRotation := s.parent.GetTransform().GetRotation()
-		position.Add(parentPosition)
-		pivot.Add(parentPivot)
-		rotation += parentRotation
+func (s *SceneNode) updateTransform(parent_transform Transform) {
+	if entity, ok := s.entity.(Transformable); ok {
+		geoM := ebiten.GeoM{}
+		transform := entity.GetTransform()
+		parentPosition := parent_transform.GetPosition()
+		parentPivot := parent_transform.GetPivot()
+		parentRotation := parent_transform.GetRotation()
+		position := transform.position.Add(parentPosition)
+		pivot := transform.pivot.Add(parentPivot)
+		rotation := transform.rotation + parentRotation
+		geoM.Translate(-pivot.X, -pivot.Y)
+		geoM.Rotate(float64(rotation%360) * 2 * math.Pi / 360)
+		geoM.Translate(position.X, position.Y)
+		transform.SetGeoM(geoM)
+		entity.SetTransform(transform)
+		parent_transform = transform
 	}
-	geoM.Translate(-pivot.X, -pivot.Y)
-	geoM.Rotate(float64(rotation%360) * 2 * math.Pi / 360)
-	geoM.Translate(position.X, position.Y)
-	return geoM
+	for _, child := range s.children {
+		child.updateTransform(parent_transform)
+	}
 }
 
-func (s *SceneNode) Draw(target *ebiten.Image, op *ebiten.DrawImageOptions) {
-	localOp := &ebiten.DrawImageOptions{}
-	localOp.GeoM = s.updateGeoM(localOp.GeoM)
-	//vector.DrawFilledCircle(target, float32(s.Transform.pivot.X), float32(s.Transform.pivot.Y), 3, s.color, false)
-	for _, child := range s.children {
-		child.Draw(target, localOp)
-	}
-}
+//func (s *SceneNode) Draw(target *ebiten.Image, op *ebiten.DrawImageOptions) {
+//	localOp := &ebiten.DrawImageOptions{}
+//	localOp.GeoM = s.updateGeoM(localOp.GeoM)
+//	if Aer, ok := s.entity.(GetSprite); ok {
+//		//vector.DrawFilledCircle(target, float32(s.Transform.pivot.X), float32(s.Transform.pivot.Y), 3, s.color, false)
+//	for _, child := range s.children {
+//		child.Draw(target, localOp)
+//	}
+//}
 
 //func (s *SceneNode) GetWorldPosition() math2d.Vector2D {
 //	transform := s.GetWorldTransform()

@@ -31,15 +31,15 @@ type PlayerShoot struct {
 	Shoot
 }
 
-func NewPlayerShoot(player *Player) *PlayerShoot {
-	shoot := NewShoot(time.Second * 5)
-	playerShoot := &PlayerShoot{*shoot}
-	position := player.GetTransform().GetPosition()
-	//playerShoot.rotation = player._sprite.getRotation()/180*M_PI - M_PI/2
-
-	playerShoot.GetTransform().SetPosition(position.X, position.Y)
-	return playerShoot
-}
+//func NewPlayerShoot(player *Player) *PlayerShoot {
+//	shoot := NewShoot(time.Second * 5)
+//	playerShoot := &PlayerShoot{*shoot}
+//	position := player.GetTransform().GetPosition()
+//	//playerShoot.rotation = player._sprite.getRotation()/180*M_PI - M_PI/2
+//
+//	playerShoot.GetTransform().SetPosition(position.X, position.Y)
+//	return playerShoot
+//}
 
 //void Shoot::update(sf::Time deltaTime)
 //{
