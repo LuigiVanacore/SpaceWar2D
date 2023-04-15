@@ -65,19 +65,24 @@ func (s *SceneNode) UpdateChildren() {
 func (s *SceneNode) updateTransform(parent_transform Transform) {
 	if entity, ok := s.entity.(Transformable); ok {
 		geoM := ebiten.GeoM{}
+
 		transform := entity.GetTransform()
 		parentPosition := parent_transform.GetPosition()
-		parentPivot := parent_transform.GetPivot()
 		parentRotation := parent_transform.GetRotation()
 		position := transform.position.Add(parentPosition)
-		pivot := transform.pivot.Add(parentPivot)
+		pivot := transform.pivot
 		rotation := transform.rotation + parentRotation
+
 		geoM.Translate(-pivot.X, -pivot.Y)
 		geoM.Rotate(float64(rotation%360) * 2 * math.Pi / 360)
 		geoM.Translate(position.X, position.Y)
+
 		transform.SetGeoM(geoM)
 		entity.SetTransform(transform)
-		parent_transform = transform
+
+		parent_transform.SetPosition(position.X, position.Y)
+		parent_transform.SetRotation(rotation)
+		parent_transform.SetGeoM(geoM)
 	}
 	for _, child := range s.children {
 		child.updateTransform(parent_transform)
